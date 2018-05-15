@@ -38,14 +38,60 @@ const cardsArray = [{
 
 var cardGrid = cardsArray.concat(cardsArray);
 
+displayCards();
 
-
+// TODO: Remove the code to debug
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
+function displayCards() {
+    cardGrid = shuffle(cardGrid);
+
+    const game = document.getElementById('game');
+
+    game.style.visibility = "hide";
+
+    //remove the old desk
+    let element;
+    if (element = game.firstElementChild) {
+      element.remove();
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    const deck = document.createElement('ul');
+    deck.setAttribute('class', 'deck');
+    fragment.appendChild(deck);
+
+    // TODO: Remove this count
+    let count = 1;
+
+    cardGrid.forEach(item => {
+      const card = document.createElement('li');
+      card.classList.add('card');
+      // TODO: Remove the switch
+      switch (count++) {
+        case 3:
+        case 8:
+          card.classList.add('match');
+          break;
+        case 15:
+          card.classList.add('open');
+          card.classList.add('show');
+          break;
+      }
+      card.dataset.name = item.name;
+      card.style.backgroundImage = `url(${item.img})`;
+      deck.appendChild(card);
+    });
+
+    game.appendChild(fragment);
+
+    game.style.visibility = "show";
+}
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
