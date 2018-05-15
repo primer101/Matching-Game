@@ -36,6 +36,7 @@ const cardsArray = [{
   },
 ];
 
+//multiply the aray for 2 to create the card matches
 var cardGrid = cardsArray.concat(cardsArray);
 
 displayCards();
@@ -48,66 +49,84 @@ displayCards();
  *   - add each card's HTML to the page
  */
 function displayCards() {
-    cardGrid = shuffle(cardGrid);
+  cardGrid = shuffle(cardGrid);
 
-    const game = document.getElementById('game');
+  const game = document.getElementById('game');
 
-    game.style.visibility = "hide";
+  game.style.visibility = "hide";
 
-    //remove the old desk
-    let element;
-    if (element = game.firstElementChild) {
-      element.remove();
+  //remove the old desk
+  let element;
+  if (element = game.firstElementChild) {
+    element.remove();
+  }
+
+  const fragment = document.createDocumentFragment();
+
+  const deck = document.createElement('ul');
+  deck.setAttribute('class', 'deck');
+  fragment.appendChild(deck);
+
+  // TODO: Remove this count
+  let count = 1;
+
+  cardGrid.forEach(item => {
+    const card = document.createElement('li');
+    card.classList.add('card');
+    // TODO: Remove the switch
+    switch (count++) {
+      case 3:
+      case 8:
+        card.classList.add('match');
+        break;
+      case 15:
+        card.classList.add('open');
+        card.classList.add('show');
+        break;
     }
+    card.dataset.name = item.name;
+    card.style.backgroundImage = 'none';
+    deck.appendChild(card);
+  });
 
-    const fragment = document.createDocumentFragment();
+  game.appendChild(fragment);
 
-    const deck = document.createElement('ul');
-    deck.setAttribute('class', 'deck');
-    fragment.appendChild(deck);
-
-    // TODO: Remove this count
-    let count = 1;
-
-    cardGrid.forEach(item => {
-      const card = document.createElement('li');
-      card.classList.add('card');
-      // TODO: Remove the switch
-      switch (count++) {
-        case 3:
-        case 8:
-          card.classList.add('match');
-          break;
-        case 15:
-          card.classList.add('open');
-          card.classList.add('show');
-          break;
-      }
-      card.dataset.name = item.name;
-      card.style.backgroundImage = `url(${item.img})`;
-      deck.appendChild(card);
-    });
-
-    game.appendChild(fragment);
-
-    game.style.visibility = "show";
+  game.style.visibility = "show";
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
+  var currentIndex = array.length,
+    temporaryValue, randomIndex;
 
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
 
-    return array;
+  return array;
 }
 
+function showCard(element) {
+  for (item of cardsArray) {
+    if (item.name === element.dataset.name) {
+      element.classList.add('open');
+      element.style.backgroundImage = `url(${item.img})`;;
+      break;
+    }
+  }
+}
+
+document.getElementById('game').addEventListener('click', function (event) {
+  const element = event.target;
+  if (element.nodeName = 'LI') {
+    event.preventDefault();
+    showCard(element);
+  }
+})
 
 /*
  * set up the event listener for a card. If a card is clicked:
