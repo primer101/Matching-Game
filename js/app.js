@@ -41,6 +41,11 @@ let cardGrid = cardsArray.concat(cardsArray);
 
 let listOpened = [];
 
+let moves = 0;
+
+// dealy to see the second opened card
+const delay = 1000;
+
 displayCards();
 
 /*
@@ -50,6 +55,9 @@ displayCards();
  *   - add each card's HTML to the page
  */
 function displayCards() {
+
+  displayMove();
+
   cardGrid = shuffle(cardGrid);
 
   const game = document.getElementById('game');
@@ -95,6 +103,10 @@ function shuffle(array) {
   return array;
 }
 
+function displayMove() {
+  document.querySelector('.moves').textContent = moves;
+}
+
 function showCard(element) {
   for (item of cardsArray) {
     if (item.name === element.dataset.name) {
@@ -114,12 +126,14 @@ function isCardMatching() {
 }
 
 function closeCards() {
+
   listOpened[0].style.backgroundImage = 'none';
   listOpened[1].style.backgroundImage = 'none';
   listOpened[0].classList.remove('open');
   listOpened[1].classList.remove('open');
   // new empty array
   listOpened = [];
+  moves++;
 }
 
 function matchCards() {
@@ -132,6 +146,11 @@ function matchCards() {
   listOpened[1].classList.add('match');
   // new empty array
   listOpened = [];
+  moves++;
+}
+
+function incrementMove() {
+
 }
 
 function cardClickHandler(event) {
@@ -143,9 +162,10 @@ function cardClickHandler(event) {
     if (listOpened.length == 2) {
       if (isCardMatching()) {
         matchCards();
-
+        displayMove();
       } else {
-        closeCards();
+        setTimeout(closeCards, delay);
+        displayMove();
       }
     }
 
