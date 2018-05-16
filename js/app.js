@@ -60,7 +60,6 @@ function resetGame() {
 
 /*
  * Display the cards on the page
- *   - shuffle the list of cards using the provided "shuffle" method below
  *   - loop through each card and create its HTML
  *   - add each card's HTML to the page
  */
@@ -180,7 +179,7 @@ function incrementMove() {
 
 function cardClickHandler(event) {
   const element = event.target;
-  if (element.nodeName = 'LI') {
+  if (element.nodeName = 'LI' && listOpened.length < 2) {
     if (listOpened.length == 1 && listOpened[0] == element) {
       // Its the same card
       return;
