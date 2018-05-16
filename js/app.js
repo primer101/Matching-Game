@@ -58,11 +58,11 @@ function displayCards() {
 
   displayMove();
 
-  cardGrid = shuffle(cardGrid);
-
   const game = document.getElementById('game');
 
   game.style.visibility = "hide";
+
+  cardGrid = shuffle(cardGrid);
 
   //remove the old desk
   let element;
@@ -133,7 +133,6 @@ function closeCards() {
   listOpened[1].classList.remove('open');
   // new empty array
   listOpened = [];
-  moves++;
 }
 
 function matchCards() {
@@ -146,7 +145,6 @@ function matchCards() {
   listOpened[1].classList.add('match');
   // new empty array
   listOpened = [];
-  moves++;
 }
 
 function incrementMove() {
@@ -160,17 +158,23 @@ function cardClickHandler(event) {
     showCard(element);
     addCardOpened(element);
     if (listOpened.length == 2) {
+      moves++;
+      displayMove();
       if (isCardMatching()) {
         matchCards();
-        displayMove();
-      } else {
+        } else {
         setTimeout(closeCards, delay);
-        displayMove();
       }
     }
-
   }
 }
+
+document.querySelector('.restart').addEventListener('click', function () {
+  listOpened = [];
+  moves = 0;
+  cardGrid = shuffle(cardGrid);
+  displayCards();
+})
 
 /*
  * set up the event listener for a card. If a card is clicked:
