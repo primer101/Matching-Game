@@ -45,16 +45,20 @@ let moves;
 
 let amountStars;
 
+let countMatches;
+
 // dealy to see the second opened card
 const delay = 1000;
 
 resetGame();
 
 function resetGame() {
+  addStars(amountStars);
   listOpened = [];
   moves = 0;
   amountStars = 3;
   cardGrid = shuffle(cardGrid);
+  countMatches = 0;
   displayCards();
 }
 
@@ -171,10 +175,27 @@ function matchCards() {
   listOpened[1].classList.add('match');
   // new empty array
   listOpened = [];
+  countMatches++;
 }
 
-function incrementMove() {
+function showWinGame() {
+  // Get the move span
+  const movesSpan = document.getElementById('final-moves');
+  movesSpan.textContent = `${moves}`;
+  const stars = document.getElementById('star-rating');
+  stars.textContent = '';
+  for (let i = 1; i <= amountStars; i++) {
+     stars.insertAdjacentHTML('beforeEnd', '<i class="fa fa-star"></i>')
+  }
 
+  // Get the modal
+  let modal = document.getElementById('myModal');
+  modal.style.display = 'block';
+}
+
+function closeModal() {
+  var modal = document.getElementById('myModal');
+  modal.style.display = 'none';
 }
 
 function cardClickHandler(event) {
@@ -196,13 +217,26 @@ function cardClickHandler(event) {
         setTimeout(closeCards, delay);
       }
     }
+    if (countMatches === 8) {
+      showWinGame();
+    }
   }
 }
 
-document.querySelector('.restart').addEventListener('click', function () {
-  addStars(amountStars);
+document.querySelector('.restart').addEventListener('click', function() {
   resetGame();
 })
+
+document.querySelector('.close').addEventListener('click', function() {
+  closeModal();
+})
+
+document.querySelector('#play-again').addEventListener('click', function() {
+  closeModal();
+  resetGame();
+})
+
+
 
 
 /*
