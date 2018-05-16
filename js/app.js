@@ -126,6 +126,14 @@ function removeStar() {
   amountStars--;
 }
 
+function addStars(amount) {
+  const element = document.querySelector('.stars');
+  const liList = element.children;
+  for (let i = 1, count = liList.length; i <= count - amount; i++) {
+    liList[i].insertAdjacentHTML('afterbegin', '<i class="fa fa-star">');
+  }
+}
+
 function showCard(element) {
   for (item of cardsArray) {
     if (item.name === element.dataset.name) {
@@ -193,6 +201,7 @@ function cardClickHandler(event) {
 }
 
 document.querySelector('.restart').addEventListener('click', function () {
+  addStars(amountStars);
   resetGame();
 })
 
