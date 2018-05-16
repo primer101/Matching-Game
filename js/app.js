@@ -37,11 +37,12 @@ const cardsArray = [{
 ];
 
 //multiply the aray for 2 to create the card matches
-var cardGrid = cardsArray.concat(cardsArray);
+let cardGrid = cardsArray.concat(cardsArray);
+
+let listOpened = [];
 
 displayCards();
 
-// TODO: Remove the code to debug
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -61,35 +62,19 @@ function displayCards() {
     element.remove();
   }
 
-  const fragment = document.createDocumentFragment();
-
   const deck = document.createElement('ul');
   deck.setAttribute('class', 'deck');
-  fragment.appendChild(deck);
-
-  // TODO: Remove this count
-  let count = 1;
 
   cardGrid.forEach(item => {
     const card = document.createElement('li');
     card.classList.add('card');
-    // TODO: Remove the switch
-    switch (count++) {
-      case 3:
-      case 8:
-        card.classList.add('match');
-        break;
-      case 15:
-        card.classList.add('open');
-        card.classList.add('show');
-        break;
-    }
     card.dataset.name = item.name;
     card.style.backgroundImage = 'none';
+    card.addEventListener('click', cardClickHandler)
     deck.appendChild(card);
   });
 
-  game.appendChild(fragment);
+  game.appendChild(deck);
 
   game.style.visibility = "show";
 }
@@ -120,13 +105,52 @@ function showCard(element) {
   }
 }
 
-document.getElementById('game').addEventListener('click', function (event) {
+function addCardOpened(element) {
+  listOpened.push(element);
+}
+
+function isCardMatching() {
+  return listOpened[0].dataset.name === listOpened[1].dataset.name;
+}
+
+function closeCards() {
+  listOpened[0].style.backgroundImage = 'none';
+  listOpened[1].style.backgroundImage = 'none';
+  listOpened[0].classList.remove('open');
+  listOpened[1].classList.remove('open');
+  // new empty array
+  listOpened = [];
+}
+
+function matchCards() {
+  //remove the event listener to lock the cards
+  listOpened[0].removeEventListener('click', cardClickHandler);
+  listOpened[1].removeEventListener('click', cardClickHandler);
+
+  // Style match
+  listOpened[0].classList.add('match');
+  listOpened[1].classList.add('match');
+  // new empty array
+  listOpened = [];
+}
+
+function cardClickHandler(event) {
   const element = event.target;
   if (element.nodeName = 'LI') {
     event.preventDefault();
     showCard(element);
+    addCardOpened(element);
+    if (listOpened.length == 2) {
+      if (isCardMatching()) {
+        matchCards();
+
+      } else {
+        closeCards();
+      }
+    }
+
   }
-})
+}
 
 /*
  * set up the event listener for a card. If a card is clicked:
