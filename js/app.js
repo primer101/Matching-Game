@@ -173,6 +173,10 @@ function incrementMove() {
 function cardClickHandler(event) {
   const element = event.target;
   if (element.nodeName = 'LI') {
+    if (listOpened.length == 1 && listOpened[0] == element) {
+      // Its the same card
+      return;
+    }
     event.preventDefault();
     showCard(element);
     addCardOpened(element);
