@@ -39,14 +39,24 @@ const cardsArray = [{
 //multiply the aray for 2 to create the card matches
 let cardGrid = cardsArray.concat(cardsArray);
 
-let listOpened = [];
+let listOpened;
 
-let moves = 0;
+let moves;
+
+let amountStars;
 
 // dealy to see the second opened card
 const delay = 1000;
 
-displayCards();
+resetGame();
+
+function resetGame() {
+  listOpened = [];
+  moves = 0;
+  amountStars = 3;
+  cardGrid = shuffle(cardGrid);
+  displayCards();
+}
 
 /*
  * Display the cards on the page
@@ -61,8 +71,6 @@ function displayCards() {
   const game = document.getElementById('game');
 
   game.style.visibility = "hide";
-
-  cardGrid = shuffle(cardGrid);
 
   //remove the old desk
   let element;
@@ -105,6 +113,17 @@ function shuffle(array) {
 
 function displayMove() {
   document.querySelector('.moves').textContent = moves;
+  if (amountStars != 1) {
+    if ((amountStars === 3 && moves > 12) || (amountStars === 2 && moves > 18)) {
+      removeStar();
+    }
+  }
+}
+
+function removeStar() {
+  const element = document.querySelector('.stars .fa');
+  element.remove();
+  amountStars--;
 }
 
 function showCard(element) {
@@ -162,7 +181,7 @@ function cardClickHandler(event) {
       displayMove();
       if (isCardMatching()) {
         matchCards();
-        } else {
+      } else {
         setTimeout(closeCards, delay);
       }
     }
@@ -170,11 +189,9 @@ function cardClickHandler(event) {
 }
 
 document.querySelector('.restart').addEventListener('click', function () {
-  listOpened = [];
-  moves = 0;
-  cardGrid = shuffle(cardGrid);
-  displayCards();
+  resetGame();
 })
+
 
 /*
  * set up the event listener for a card. If a card is clicked:
