@@ -18,19 +18,24 @@
         </header>
 
         <section class="score-panel">
-            <ul class="stars">
-                <li>
-                    <i class="fa fa-star"></i>
-                </li>
-                <li>
-                    <i class="fa fa-star"></i>
-                </li>
-                <li>
-                    <i class="fa fa-star"></i>
-                </li>
-            </ul>
+            <div>
+                <ul class="stars">
+                    <li>
+                        <i class="fa fa-star"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-star"></i>
+                    </li>
+                    <li>
+                        <i class="fa fa-star"></i>
+                    </li>
+                </ul>
+                    <span class="moves">3</span><span>  Moves</span>
+            </div>
 
-            <span class="moves">3</span> Moves
+            <div>
+                <span>Time : </span><span class="timer">  00:00 </span>
+           </div>
 
             <div class="restart">
                 <i class="fa fa-repeat"></i>
@@ -41,14 +46,10 @@
 
         <!-- The Modal -->
         <div id="myModal" class="modal">
-
-            <!-- Modal content -->
             <div class="modal-content">
                 <!-- <div class="content-1"> -->
                 <span class="close">&times;</span>
                 <h2>✨ Congratulations, you're a winner 🎉</h2>
-                <!-- </div> -->
-                <!-- <div class="content-2"> -->
                 <p>You made
                     <span id="final-moves"> </span> moves </p>
                 <p>in
@@ -57,7 +58,6 @@
                 <p>Rating:
                     <span id="star-rating"></span>
                 </p>
-                <!-- </div> -->
                 <button id="play-again">
                     Play again?
                 </button>

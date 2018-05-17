@@ -54,6 +54,7 @@ resetGame();
 
 function resetGame() {
   addStars(amountStars);
+  resetTimer();
   listOpened = [];
   moves = 0;
   amountStars = 3;
@@ -116,11 +117,10 @@ function shuffle(array) {
 
 function displayMove() {
   document.querySelector('.moves').textContent = moves;
-  if (amountStars != 1) {
-    if ((amountStars === 3 && moves > 12) || (amountStars === 2 && moves > 18)) {
-      removeStar();
-    }
+  if ((amountStars === 3 && moves > 14) || (amountStars === 2 && moves > 19)) {
+    removeStar();
   }
+
 }
 
 function removeStar() {
@@ -182,12 +182,13 @@ function showWinGame() {
   // Get the move span
   const movesSpan = document.getElementById('final-moves');
   movesSpan.textContent = `${moves}`;
+  const time = document.getElementById('total-time');
+  time.textContent = formatTime();
   const stars = document.getElementById('star-rating');
   stars.textContent = '';
   for (let i = 1; i <= amountStars; i++) {
-     stars.insertAdjacentHTML('beforeEnd', '<i class="fa fa-star"></i>')
+    stars.insertAdjacentHTML('beforeEnd', '<i class="fa fa-star"></i>')
   }
-
   // Get the modal
   let modal = document.getElementById('myModal');
   modal.style.display = 'block';
@@ -198,12 +199,20 @@ function closeModal() {
   modal.style.display = 'none';
 }
 
+function formatTime() {
+  mins = minutes != 0 ? `${minutes} minutes and ` : '';
+  return `${mins}${seconds-1} seconds.`;
+}
+
 function cardClickHandler(event) {
   const element = event.target;
   if (element.nodeName = 'LI' && listOpened.length < 2) {
     if (listOpened.length == 1 && listOpened[0] == element) {
       // Its the same card
       return;
+    }
+    if (moves === 0) {
+      startTime();
     }
     event.preventDefault();
     showCard(element);
@@ -218,34 +227,85 @@ function cardClickHandler(event) {
       }
     }
     if (countMatches === 8) {
+      stopTime();
       showWinGame();
     }
   }
 }
 
-document.querySelector('.restart').addEventListener('click', function() {
+document.querySelector('.restart').addEventListener('click', function () {
+  stopTime();
   resetGame();
 })
 
-document.querySelector('.close').addEventListener('click', function() {
+document.querySelector('.close').addEventListener('click', function () {
   closeModal();
 })
 
-document.querySelector('#play-again').addEventListener('click', function() {
+document.querySelector('#play-again').addEventListener('click', function () {
   closeModal();
   resetGame();
 })
 
+// initialize your variables outside the function
+var count = 0;
+var clearTime;
+var seconds = 0,
+  mminutes = 0;
+var secs, mins;
 
+function startWatch() {
 
+  if (seconds === 60) {
+    seconds = 0;
+    minutes++
+  }
+  /* you use the javascript tenary operator to format how the minutes should look and add 0 to minutes if less than 10 */
+  mins = (minutes < 10) ? ('0' + minutes + ':') : (minutes + ':');
 
-/*
- * set up the event listener for a card. If a card is clicked:
- *  - display the card's symbol (put this functionality in another function that you call from this one)
- *  - add the card to a *list* of "open" cards (put this functionality in another function that you call from this one)
- *  - if the list already has another card, check to see if the two cards match
- *    + if the cards do match, lock the cards in the open position (put this functionality in another function that you call from this one)
- *    + if the cards do not match, remove the cards from the list and hide the card's symbol (put this functionality in another function that you call from this one)
- *    + increment the move counter and display it on the page (put this functionality in another function that you call from this one)
- *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
- */
+  /* check if minutes is equal to 60 and restart */
+  if (minutes === 60) {
+    minutes = 0;
+  }
+  secs = (seconds < 10) ? ('0' + seconds) : (seconds);
+  // display the stopwatch
+  var x = document.querySelector(".timer");
+  x.innerHTML = mins + secs;
+  if ((amountStars === 3 && seconds > 29) || (amountStars === 2 && seconds > 39)) {
+    removeStar();
+  }
+  /* call the seconds counter after displaying the stop watch and increment seconds by +1 to keep it counting */
+  seconds++;
+  /* call the setTimeout( ) to keep the stop watch alive ! */
+  clearTime = setTimeout("startWatch( )", 1000);
+}
+
+//create a function to start the stop watch
+function startTime() {
+  /* check if seconds, minutes, and hours are equal to zero and start the stop watch */
+  if (seconds === 0 && minutes === 0) {
+    /* call the startWatch( ) function to execute the stop watch whenever the startTime( ) is triggered */
+    startWatch();
+  }
+}
+
+//create a function to stop the time
+function stopTime() {
+  /* check if seconds, minutes and hours are not equal to 0 */
+  if (seconds !== 0 || minutes !== 0) {
+    /* clear the stop watch using the setTimeout( ) return value 'clearTime' as ID */
+    clearTimeout(clearTime);
+  }
+}
+
+// reset the stop watch
+function resetTimer() {
+  seconds = 0;
+  minutes = 0;
+  secs = '0' + seconds;
+  mins = '0' + minutes + ':';
+  /* display the stopwatch after it's been stopped */
+  var x = document.querySelector(".timer");
+  var stopTime = mins + secs;
+  x.innerHTML = stopTime;
+}
