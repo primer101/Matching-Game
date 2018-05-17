@@ -1,7 +1,6 @@
 /*
- * List that holds all of cards
+ * List all of cards
  */
-
 const cardsArray = [{
     'name': 'captain-america',
     'img': 'img/5a356ffab33339.248349711513451514734.png',
@@ -39,6 +38,7 @@ const cardsArray = [{
 //multiply the aray for 2 to create the card matches
 let cardGrid = cardsArray.concat(cardsArray);
 
+// List of opened cards
 let listOpened;
 
 let moves;
@@ -47,8 +47,8 @@ let amountStars;
 
 let countMatches;
 
-// dealy to see the second opened card
-const delay = 1000;
+// dealy to see the second opened card and the timer
+const DELAY = 1000;
 
 resetGame();
 
@@ -73,7 +73,6 @@ function displayCards() {
   displayMove();
 
   const game = document.getElementById('game');
-
   game.style.visibility = "hide";
 
   //remove the old desk
@@ -90,6 +89,7 @@ function displayCards() {
     card.classList.add('card');
     card.dataset.name = item.name;
     card.style.backgroundImage = 'none';
+    // Add a click event listener
     card.addEventListener('click', cardClickHandler)
     deck.appendChild(card);
   });
@@ -117,10 +117,10 @@ function shuffle(array) {
 
 function displayMove() {
   document.querySelector('.moves').textContent = moves;
+  // update Star Rating
   if ((amountStars === 3 && moves > 14) || (amountStars === 2 && moves > 19)) {
     removeStar();
   }
-
 }
 
 function removeStar() {
@@ -156,7 +156,6 @@ function isCardMatching() {
 }
 
 function closeCards() {
-
   listOpened[0].style.backgroundImage = 'none';
   listOpened[1].style.backgroundImage = 'none';
   listOpened[0].classList.remove('open');
@@ -178,6 +177,7 @@ function matchCards() {
   countMatches++;
 }
 
+// Show a modal windows to congratas and show statistics
 function showWinGame() {
   // Get the move span
   const movesSpan = document.getElementById('final-moves');
@@ -199,11 +199,13 @@ function closeModal() {
   modal.style.display = 'none';
 }
 
+// Format the time to words minuntes and seconds
 function formatTime() {
   mins = minutes != 0 ? `${minutes} minutes and ` : '';
-  return `${mins}${seconds-1} seconds.`;
+  return `${mins}${seconds} seconds.`;
 }
 
+// Click handler of cards
 function cardClickHandler(event) {
   const element = event.target;
   if (element.nodeName = 'LI' && listOpened.length < 2) {
@@ -223,78 +225,87 @@ function cardClickHandler(event) {
       if (isCardMatching()) {
         matchCards();
       } else {
-        setTimeout(closeCards, delay);
+        setTimeout(closeCards, DELAY);
       }
     }
     if (countMatches === 8) {
+      // Game finished
       stopTime();
       showWinGame();
     }
   }
 }
 
+// Restart event
 document.querySelector('.restart').addEventListener('click', function () {
   stopTime();
   resetGame();
 })
 
+// Close modal event
 document.querySelector('.close').addEventListener('click', function () {
   closeModal();
 })
 
+// Play again button event
 document.querySelector('#play-again').addEventListener('click', function () {
   closeModal();
   resetGame();
 })
 
-// initialize your variables outside the function
-var count = 0;
+// Declare and initialize timer variables
 var clearTime;
 var seconds = 0,
-  mminutes = 0;
-var secs, mins;
+  minutes = 0;
 
 function startWatch() {
-
+  // check if minutes is equal to 60 to update min and sec
   if (seconds === 60) {
     seconds = 0;
     minutes++
   }
-  /* you use the javascript tenary operator to format how the minutes should look and add 0 to minutes if less than 10 */
-  mins = (minutes < 10) ? ('0' + minutes + ':') : (minutes + ':');
 
-  /* check if minutes is equal to 60 and restart */
-  if (minutes === 60) {
+  // check if minutes is equal to 99 and restart
+  if (minutes === 99) {
     minutes = 0;
   }
-  secs = (seconds < 10) ? ('0' + seconds) : (seconds);
-  // display the stopwatch
-  var x = document.querySelector(".timer");
-  x.innerHTML = mins + secs;
+
+  displayTimer();
+
+  // Update the Star Rating
   if ((amountStars === 3 && seconds > 29) || (amountStars === 2 && seconds > 39)) {
     removeStar();
   }
-  /* call the seconds counter after displaying the stop watch and increment seconds by +1 to keep it counting */
+
   seconds++;
-  /* call the setTimeout( ) to keep the stop watch alive ! */
-  clearTime = setTimeout("startWatch( )", 1000);
+
+  // call the setTimeout( ) again
+  clearTime = setTimeout("startWatch( )", DELAY);
+}
+
+function displayTimer() {
+  // format how the minutes and seconds should look and add 0 if less than 10
+  const mins = (minutes < 10) ? ('0' + minutes + ':') : (minutes + ':');
+  const secs = (seconds < 10) ? ('0' + seconds) : (seconds);
+  // display the stopwatch
+  var x = document.querySelector(".timer");
+  x.textContent = mins + secs;
 }
 
 //create a function to start the stop watch
 function startTime() {
-  /* check if seconds, minutes, and hours are equal to zero and start the stop watch */
   if (seconds === 0 && minutes === 0) {
-    /* call the startWatch( ) function to execute the stop watch whenever the startTime( ) is triggered */
     startWatch();
   }
 }
 
 //create a function to stop the time
 function stopTime() {
-  /* check if seconds, minutes and hours are not equal to 0 */
   if (seconds !== 0 || minutes !== 0) {
-    /* clear the stop watch using the setTimeout( ) return value 'clearTime' as ID */
+    // clear the stop watch using the setTimeout( ) return value 'clearTime' as ID
     clearTimeout(clearTime);
+    // Write a last time the timer
+    displayTimer();
   }
 }
 
@@ -302,10 +313,5 @@ function stopTime() {
 function resetTimer() {
   seconds = 0;
   minutes = 0;
-  secs = '0' + seconds;
-  mins = '0' + minutes + ':';
-  /* display the stopwatch after it's been stopped */
-  var x = document.querySelector(".timer");
-  var stopTime = mins + secs;
-  x.innerHTML = stopTime;
+  displayTimer();
 }
