@@ -88,7 +88,13 @@ function displayCards() {
     const card = document.createElement('li');
     card.classList.add('card');
     card.dataset.name = item.name;
-    card.style.backgroundImage = 'none';
+    const back = document.createElement('div');
+    back.classList.add('back');
+    var front = document.createElement('div');
+    front.classList.add('front');
+    front.style.backgroundImage = `url(${item.img}`;
+    card.appendChild(front);
+    card.appendChild(back);
     // Add a click event listener
     card.addEventListener('click', cardClickHandler)
     deck.appendChild(card);
@@ -138,13 +144,7 @@ function addStars(amount) {
 }
 
 function showCard(element) {
-  for (item of cardsArray) {
-    if (item.name === element.dataset.name) {
-      element.classList.add('open');
-      element.style.backgroundImage = `url(${item.img})`;;
-      break;
-    }
-  }
+  element.parentNode.classList.add('open');
 }
 
 function addCardOpened(element) {
@@ -152,26 +152,24 @@ function addCardOpened(element) {
 }
 
 function isCardMatching() {
-  return listOpened[0].dataset.name === listOpened[1].dataset.name;
+  return listOpened[0].parentNode.dataset.name === listOpened[1].parentNode.dataset.name;
 }
 
 function closeCards() {
-  listOpened[0].style.backgroundImage = 'none';
-  listOpened[1].style.backgroundImage = 'none';
-  listOpened[0].classList.remove('open');
-  listOpened[1].classList.remove('open');
+  listOpened[0].parentNode.classList.remove('open');
+  listOpened[1].parentNode.classList.remove('open');
   // new empty array
   listOpened = [];
 }
 
 function matchCards() {
   //remove the event listener to lock the cards
-  listOpened[0].removeEventListener('click', cardClickHandler);
-  listOpened[1].removeEventListener('click', cardClickHandler);
+  listOpened[0].parentNode.removeEventListener('click', cardClickHandler);
+  listOpened[1].parentNode.removeEventListener('click', cardClickHandler);
 
   // Style match
-  listOpened[0].classList.add('match');
-  listOpened[1].classList.add('match');
+  listOpened[0].parentNode.classList.add('match');
+  listOpened[1].parentNode.classList.add('match');
   // new empty array
   listOpened = [];
   countMatches++;
@@ -208,8 +206,8 @@ function formatTime() {
 // Click handler of cards
 function cardClickHandler(event) {
   const element = event.target;
-  if (element.nodeName = 'LI' && listOpened.length < 2) {
-    if (listOpened.length == 1 && listOpened[0] == element) {
+  if (element.nodeName = 'DIV' && listOpened.length < 2) {
+    if (listOpened.length == 1 && listOpened[0].parentNode == element.parentNode) {
       // Its the same card
       return;
     }
@@ -264,21 +262,16 @@ function startWatch() {
     seconds = 0;
     minutes++
   }
-
   // check if minutes is equal to 99 and restart
   if (minutes === 99) {
     minutes = 0;
   }
-
   displayTimer();
-
   // Update the Star Rating
   if ((amountStars === 3 && seconds > 30) || (amountStars === 2 && seconds > 39)) {
     removeStar();
   }
-
   seconds++;
-
   // call the setTimeout( ) again
   clearTime = setTimeout("startWatch( )", DELAY);
 }
