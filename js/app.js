@@ -273,7 +273,7 @@ function startWatch() {
   displayTimer();
 
   // Update the Star Rating
-  if ((amountStars === 3 && seconds > 29) || (amountStars === 2 && seconds > 39)) {
+  if ((amountStars === 3 && seconds > 30) || (amountStars === 2 && seconds > 39)) {
     removeStar();
   }
 
