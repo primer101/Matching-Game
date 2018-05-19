@@ -3,7 +3,6 @@
 .stylelintrc
 .eslintrc.json
 
-img-src/*
 
 .vscode/*
 !.vscode/settings.json
