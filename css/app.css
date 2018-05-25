@@ -23,6 +23,7 @@ body {
 }
 
 .container {
+    display: -ms-flexbox;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -38,6 +39,13 @@ h1 {
  * Styles for the deck of cards
  */
 
+/* This is a workaround to a bug in IE10/11 with min-height and flexbox */
+
+.game {
+    display: flex;
+    flex-direction: column;
+}
+
 .deck {
     max-width: 660px;
     min-height: 680px;
@@ -50,6 +58,7 @@ h1 {
     display: -ms-flexbox;
     display: flex;
     flex-wrap: wrap;
+    flex-shrink: 0;
     justify-content: space-between;
     align-items: center;
     margin: 0 0 3em;
@@ -62,12 +71,13 @@ h1 {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
+    flex-shrink: 0;
     justify-content: center;
     align-items: center;
     box-shadow: 5px 2px 20px 0 rgba(46, 61, 73, 0.5);
-    -webkit-transition: transform .4s linear;
-    -o-transition: transform .4s linear;
-    transition: transform .4s linear;
+    -webkit-transition: all 1s linear;
+    -o-transition: all 1s linear;
+    transition: all 1s linear;
     -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     margin: 5px;
@@ -79,6 +89,7 @@ h1 {
     height: 125px;
     width: 125px;
     border-radius: 8px;
+    max-width: 100%;
 }
 
 .back,
@@ -95,8 +106,9 @@ h1 {
 }
 
 .front {
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
+    visibility: hidden;
+    /* -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg); */
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center center;
@@ -105,8 +117,8 @@ h1 {
 .deck .card.open {
     background: #02b3e4;
     cursor: default;
-    -webkit-transform: rotateY(180deg);
-    transform: rotateY(180deg);
+    /* -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg); */
 }
 
 .deck .card.match {
@@ -202,7 +214,6 @@ h1 {
         background-size: 100px 100px;
         background-position: center center;
     }
-
     .back {
         width: 100px;
         height: 100px;

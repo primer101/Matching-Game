@@ -72,19 +72,19 @@ function displayCards() {
 
   displayMove();
 
-  const game = document.getElementById('game');
-  game.style.visibility = "hidden";
+  const game = document.querySelector('.game');
+  game.style.visibility = 'hidden';
 
   //remove the old desk
   let element;
   if (element = game.firstElementChild) {
-    element.remove();
+    element.parentNode.removeChild(element);
   }
 
   const deck = document.createElement('ul');
   deck.setAttribute('class', 'deck');
 
-  cardGrid.forEach(item => {
+  cardGrid.forEach(function (item) {
     const card = document.createElement('li');
     card.classList.add('card');
     card.dataset.name = item.name;
@@ -92,9 +92,9 @@ function displayCards() {
     back.classList.add('back');
     var front = document.createElement('div');
     front.classList.add('front');
-    front.style.backgroundImage = `url(${item.img})`;
-    card.appendChild(front);
+    front.style.backgroundImage = 'url(' + item.img + ')';
     card.appendChild(back);
+    card.appendChild(front);
     // Add a click event listener
     card.addEventListener('click', cardClickHandler)
     deck.appendChild(card);
@@ -102,7 +102,7 @@ function displayCards() {
 
   game.appendChild(deck);
 
-  game.style.visibility = "visible";
+  game.style.visibility = 'visible';
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -131,7 +131,7 @@ function displayMove() {
 
 function removeStar() {
   const element = document.querySelector('.stars .fa');
-  element.remove();
+  element.parentNode.removeChild(element);
   amountStars--;
 }
 
@@ -145,6 +145,8 @@ function addStars(amount) {
 
 function showCard(element) {
   element.parentNode.classList.add('open');
+  element.style.visibility = 'hidden';
+  element.nextSibling.style.visibility = 'visible';
 }
 
 function addCardOpened(element) {
@@ -155,9 +157,13 @@ function isCardMatching() {
   return listOpened[0].parentNode.dataset.name === listOpened[1].parentNode.dataset.name;
 }
 
-function closeCards() {
+function closeCards(element) {
   listOpened[0].parentNode.classList.remove('open');
   listOpened[1].parentNode.classList.remove('open');
+  element.style.visibility = 'visible';
+  element.nextSibling.style.visibility = 'hidden';
+  listOpened[0].style.visibility = 'visible';
+  listOpened[0].nextSibling.style.visibility = 'hidden';
   // new empty array
   listOpened = [];
 }
@@ -179,7 +185,7 @@ function matchCards() {
 function showWinGame() {
   // Get the move span
   const movesSpan = document.getElementById('final-moves');
-  movesSpan.textContent = `${moves}`;
+  movesSpan.textContent = moves;
   const time = document.getElementById('total-time');
   time.textContent = formatTime();
   const stars = document.getElementById('star-rating');
@@ -199,8 +205,8 @@ function closeModal() {
 
 // Format the time to words minuntes and seconds
 function formatTime() {
-  mins = minutes != 0 ? `${minutes} minutes and ` : '';
-  return `${mins}${seconds} seconds.`;
+  mins = minutes != 0 ? minutes + ' minutes and ' : '';
+  return mins + seconds + ' seconds.';
 }
 
 // Click handler of cards
@@ -223,7 +229,9 @@ function cardClickHandler(event) {
       if (isCardMatching()) {
         matchCards();
       } else {
-        setTimeout(closeCards, DELAY);
+        setTimeout(function () {
+          closeCards(element);
+        }, DELAY);
       }
     }
     if (countMatches === 8) {
@@ -273,7 +281,7 @@ function startWatch() {
   }
   seconds++;
   // call the setTimeout( ) again
-  clearTime = setTimeout("startWatch( )", DELAY);
+  clearTime = setTimeout('startWatch( )', DELAY);
 }
 
 function displayTimer() {
@@ -281,7 +289,7 @@ function displayTimer() {
   const mins = (minutes < 10) ? ('0' + minutes + ':') : (minutes + ':');
   const secs = (seconds < 10) ? ('0' + seconds) : (seconds);
   // display the stopwatch
-  var x = document.querySelector(".timer");
+  var x = document.querySelector('.timer');
   x.textContent = mins + secs;
 }
 
