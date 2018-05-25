@@ -73,7 +73,7 @@ function displayCards() {
   displayMove();
 
   const game = document.getElementById('game');
-  game.style.visibility = "hide";
+  game.style.visibility = "hidden";
 
   //remove the old desk
   let element;
@@ -92,7 +92,7 @@ function displayCards() {
     back.classList.add('back');
     var front = document.createElement('div');
     front.classList.add('front');
-    front.style.backgroundImage = `url(${item.img}`;
+    front.style.backgroundImage = `url(${item.img})`;
     card.appendChild(front);
     card.appendChild(back);
     // Add a click event listener
@@ -102,7 +102,7 @@ function displayCards() {
 
   game.appendChild(deck);
 
-  game.style.visibility = "show";
+  game.style.visibility = "visible";
 }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
